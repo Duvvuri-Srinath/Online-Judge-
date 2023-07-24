@@ -8,7 +8,7 @@ const PORT = 8000 ;
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-// app.use(express.static("public"));
+app.use(express.static("public"));
 
 app.get('/login',(req,res)=>{
     const filePath = path.join(__dirname, 'login.html');
@@ -30,41 +30,44 @@ app.get('/prob',(req,res) => {
     res.sendFile(filePath);
 })
 
-app.post('/submit',(req,res) => {
+// app.post('/submit',(req,res) => {
 
-    const data = {
-        username:req.body.username ,
-        password:req.body.password 
-    }
+//     const data = {
+//         username:req.body.username ,
+//         password:req.body.password 
+//     }
     
-    let validLogin = (username==="Sri" && password==="123") ;
+//     let validLogin = (username==="Sri" && password==="123") ;
 
-    // console.log(username+" "+password+" "+validLogin) ;
+//     // console.log(username+" "+password+" "+validLogin) ;
 
-    if(validLogin) {
-        const filePath = path.join(__dirname, 'home.html');
-        res.sendFile(filePath);
-    }
-    else {
-        // const filePath = path.join(__dirname, 'login.html');
-        // res.sendFile(filePath);
-        res.send(displayError) ;
-    }
+//     if(validLogin) {
+//         const filePath = path.join(__dirname, 'home.html');
+//         res.sendFile(filePath);
+//     }
+//     else {
+//         // const filePath = path.join(__dirname, 'login.html');
+//         // res.sendFile(filePath);
+//         res.send(displayError) ;
+//     }
 
-    // const filePath = path.join(__dirname, 'prob.html');
-    // res.sendFile(filePath);
-})
+//     // const filePath = path.join(__dirname, 'prob.html');
+//     // res.sendFile(filePath);
+// })
 
-app.post('/signup', async (req,res)=>{
-    const data = {
-        username:req.body.username ,
-        password:req.body.password 
-    }
-    console.log(data.username+" "+data.password) ;
-    await collection.insertMany([data]) ;
+// app.post('/signup', async (req,res)=>{
+//     const data = {
+//         username:req.body.username ,
+//         password:req.body.password 
+//     }
+//     console.log(data.username+" "+data.password) ;
+//     await collection.insertMany([data]) ;
 
-    res.send("Success") ;
-})
+//     res.send("Success") ;
+// })
+
+const router = require('./routes') ;
+app.use(router) ;
 
 app.listen(PORT, () => {
     console.log("Server started on port "+PORT) ;
