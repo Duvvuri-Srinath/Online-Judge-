@@ -1,14 +1,42 @@
 const express = require('express') ;
 const app = express() ;
+const { generateFile } = require('./generateFile');
+const { executeCpp } = require('./executeCpp');
+const cors  = require('cors');
+
 const path = require('path');
 const collection = require('./mongodb');
 
 let displayError = "Invalid username or password" ;
 const PORT = 8000 ;
 
+//middlewares
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static("public"));
+
+
+app.get("/", (req, res) => {
+    res.json({ online: 'compiler' });
+});
+
+app.post("/run", async (req, res) => {
+    // const language = req.body.language;
+    // const code = req.body.code;
+
+    const { language = 'cpp', code } = req.body;
+    if (code === undefined) {
+        return res.status(404).json({ success: false, error: "Empty code!" });
+    }
+    try {
+        const filePath = await generateFile(language, code);
+        const output = await executeCpp(filePath);
+        res.json({ filePath, output });
+    } catch (error) {
+        res.status(500).json({ error: error });
+    }
+});
 
 app.get('/login',(req,res)=>{
     const filePath = path.join(__dirname, 'login.html');
